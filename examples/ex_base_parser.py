@@ -1,12 +1,13 @@
-from pathlib import Path
-from datetime import datetime
-from shutil import disk_usage
 from argparse import Namespace
+from datetime import datetime
+from pathlib import Path
+from shutil import disk_usage
 
 from cmd2 import Cmd, CommandSet, with_default_category
 from pydantic import BaseModel
-from rich.table import Table
 from rich import print
+from rich.table import Table
+
 from overhead_cmd import strip_cmd2_wrapped, with_model_parser
 
 
@@ -22,7 +23,9 @@ class DirList(BaseModel):
             paths = (self.path,)
             directory = self.path.parent
 
-        table = Table(title=f"Directory of {directory}", caption_justify="left", title_style="")
+        table = Table(
+            title=f"Directory of {directory}", caption_justify="left", title_style=""
+        )
         table.add_column("Date", highlight=True)
         table.add_column("Time", highlight=True)
         table.add_column("Size", highlight=True, justify="right")
@@ -41,11 +44,13 @@ class DirList(BaseModel):
                 date.strftime("%m/%d/%Y"),
                 date.strftime("%I:%M %p"),
                 f"{stat.st_size:,}" if path.is_file() else "",
-                path.name
+                path.name,
             )
 
         table.caption = f"{len(file_sizes)} File(s) {sum(file_sizes)}"
-        table.caption += f"\n{num_dirs} Dir(s) {disk_usage(self.path).free:,} bytes free"
+        table.caption += (
+            f"\n{num_dirs} Dir(s) {disk_usage(self.path).free:,} bytes free"
+        )
 
         print()
         print(table)

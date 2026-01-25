@@ -6,7 +6,6 @@ from pydantic import BaseModel
 from pydantic_settings import BaseSettings, CliSettingsSource
 
 
-# TODO: add decorator
 def model_to_parser(
     settings: Union[Type[BaseSettings], Type[BaseModel]],
     root_parser: Optional[Union[Cmd2ArgumentParser, ArgumentParser]] = None,
@@ -17,6 +16,7 @@ def model_to_parser(
     if issubclass(settings, BaseSettings):
         CliSettingsSource(settings, root_parser=root_parser)
     else:
+
         class Adapter(  # pyright: ignore reportIncompatibleVariableOverride
             BaseSettings, settings
         ):
