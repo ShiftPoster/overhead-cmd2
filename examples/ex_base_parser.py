@@ -3,12 +3,11 @@ from datetime import datetime
 from shutil import disk_usage
 from argparse import Namespace
 
-from cmd2 import Cmd, with_argparser, CommandSet, with_default_category
+from cmd2 import Cmd, CommandSet, with_default_category
 from pydantic import BaseModel
-# from pydantic_settings import BaseSettings
 from rich.table import Table
 from rich import print
-from overhead_cmd import model_to_parser, strip_cmd2_wrapped
+from overhead_cmd import strip_cmd2_wrapped, with_model_parser
 
 
 class DirList(BaseModel):
@@ -55,7 +54,7 @@ class DirList(BaseModel):
 
 @with_default_category("Directory Commands")
 class DirCommandSet(CommandSet):
-    @with_argparser(model_to_parser(DirList))
+    @with_model_parser(DirList)
     def do_list(self, args: Namespace):
         DirList(**strip_cmd2_wrapped(args)).main()
 
