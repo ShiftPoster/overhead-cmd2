@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 
 from cmd2 import Cmd, Statement
 
@@ -24,7 +24,7 @@ def file_only_filter(record: Record) -> bool:
 
 class LoguruCmd(Cmd):
     def onecmd(
-        self, statement: Statement | str, *, add_to_history: bool = True
+        self, statement: Union[Statement, str], *, add_to_history: bool = True
     ) -> bool:
         with _file_logger.catch(reraise=True):
             return super().onecmd(statement, add_to_history=add_to_history)
