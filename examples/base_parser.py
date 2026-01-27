@@ -13,7 +13,7 @@ from pydantic_settings import (
 from rich import print
 from rich.table import Table
 
-from overhead_cmd import strip_cmd2_wrapped, with_model_parser
+from overhead_cmd2 import strip_cmd2_wrapped, with_model_parser
 
 
 class DirList(BaseModel):

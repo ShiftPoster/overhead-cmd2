@@ -3,7 +3,7 @@ from pathlib import Path
 
 from loguru import logger
 
-from overhead_cmd.loguru import LoguruCmd, file_only_filter
+from overhead_cmd2.loguru import LoguruCmd, file_only_filter
 
 
 class MyCmd(LoguruCmd):
