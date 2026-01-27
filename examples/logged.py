@@ -22,5 +22,5 @@ if __name__ == "__main__":
     import sys
     logger.remove()
     logger.add(sys.stdout, filter=lambda r: "file_only" not in r["extra"])
-    logger.add(Path.cwd() / "logs" / "ex_{time}.log")
+    logger.add(Path.cwd() / "logs" / "loguru_{time}.log")
     MyCmd().cmdloop()
