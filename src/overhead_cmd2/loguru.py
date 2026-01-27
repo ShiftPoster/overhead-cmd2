@@ -1,5 +1,9 @@
 from cmd2 import Cmd, Statement
-from loguru import logger, Record
+
+try:
+    from loguru import logger, Record
+except ImportError as err:
+    raise ImportError("'loguru' is not installed, run `pip install overhead-cmd2[toml]`") from err
 
 FILE_ONLY_KEY: str = "file_only"
 file_logger = logger.bind(**{FILE_ONLY_KEY: True})

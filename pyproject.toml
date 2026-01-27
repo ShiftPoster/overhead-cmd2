@@ -7,8 +7,9 @@ name = "overhead-cmd2"
 version = "0.0.0"
 dependencies = [
     "cmd2",
-    "loguru",
     "pydantic",
     "pydantic-settings",
-    "rich",
 ]
+
+[project.optional-dependencies]
+log = ["loguru"]
