@@ -5,6 +5,11 @@ from shutil import disk_usage
 
 from cmd2 import Cmd, CommandSet, with_default_category
 from pydantic import BaseModel
+from pydantic_settings import (
+    BaseSettings,
+    CliPositionalArg,
+    CliSubCommand,
+)
 from rich import print
 from rich.table import Table
 
@@ -12,7 +17,7 @@ from overhead_cmd import strip_cmd2_wrapped, with_model_parser
 
 
 class DirList(BaseModel):
-    path: Path = Path.cwd()
+    path: CliPositionalArg[Path] = Path.cwd()
 
     def main(self):
         self.path = self.path.absolute()
@@ -62,6 +67,38 @@ class DirCommandSet(CommandSet):
     @with_model_parser(DirList)
     def do_list(self, args: Namespace):
         DirList(**strip_cmd2_wrapped(args)).main()
+
+
+class Init(BaseModel):
+    directory: CliPositionalArg[str]
+
+
+class Clone(BaseModel):
+    repository: CliPositionalArg[str]
+    directory: CliPositionalArg[str]
+
+
+class Git(BaseSettings):
+    clone: CliSubCommand[Clone]
+    init: CliSubCommand[Init]
+
+    def main(self):
+        print(self.model_dump())
+
+
+@with_default_category("Git Commands")
+class GitCommandSet(CommandSet):
+    @with_model_parser(Git)
+    def do_git(self, args: Namespace):
+        # FIXME
+        """
+        (Cmd) git init
+        usage: git init [-h] DIRECTORY
+        AttributeError: 'RawDescriptionHelpFormatter' object has no attribute 'console'
+
+        To enable full traceback, run the following command: set debug true
+        """
+        Git(**strip_cmd2_wrapped(args)).main()
 
 
 class MyCmd(Cmd):
