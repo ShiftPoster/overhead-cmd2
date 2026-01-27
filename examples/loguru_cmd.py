@@ -3,7 +3,7 @@ from pathlib import Path
 
 from loguru import logger
 
-from overhead_cmd2.loguru import LoguruCmd, file_only_filter
+from overhead_cmd2 import LoguruCmd, file_only_filter
 
 
 class MyCmd(LoguruCmd):
@@ -15,6 +15,7 @@ class MyCmd(LoguruCmd):
 
 if __name__ == "__main__":
     import sys
+
     logger.remove()
     logger.add(sys.stdout, filter=file_only_filter)
     logger.add(Path.cwd() / "logs" / "loguru_{time}.log")
