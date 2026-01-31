@@ -87,9 +87,10 @@ class MyCmd(Cmd):
 
 
 if __name__ == "__main__":
+    name = Path(__file__).with_suffix("").name
     logger.remove()
     logger.add(
         RichHandler(console=console), format=lambda _: "{message}", backtrace=False
     )
-    logger.add(Path.cwd() / "logs" / "loguru_{time}.log")
+    logger.add(Path.cwd() / "logs" / (name + "_{time}.log"))
     MyCmd().cmdloop()
