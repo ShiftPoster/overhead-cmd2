@@ -13,3 +13,4 @@ dependencies = [
 
 [project.optional-dependencies]
 loguru = ["loguru"]
+test = ["pytest"]
