@@ -40,6 +40,7 @@ class Git(BaseSettings):
 @with_default_category("My Commands")
 class DirCommandSet(CommandSet):
     dir_adapter = BaseModelAdapter(DirList)
+    dir_adapter.apply_completer({"path": Cmd.path_complete})
 
     @with_argparser(dir_adapter.parser)
     def do_dir(self, args: Namespace):

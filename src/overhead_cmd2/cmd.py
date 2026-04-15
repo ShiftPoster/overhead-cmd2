@@ -1,5 +1,5 @@
 from argparse import ArgumentParser, Namespace
-from typing import Dict, Optional, Type, Union
+from typing import Dict, Optional, Type, Union, Callable
 
 from cmd2 import Cmd, Cmd2ArgumentParser, Cmd2AttributeWrapper, with_argparser
 from pydantic import BaseModel
@@ -24,6 +24,16 @@ class BaseSettingsAdapter:
 
     def cli_run(self, args: Namespace):
         return CliApp.run(self.Settings, cli_settings_source=self.settings_source, cli_args=args)
+
+    def apply_completer(self, dest_mapping: dict[str, Callable]) -> list[str]:
+        dests = list(dest_mapping.keys())
+        for action in self.parser._actions:
+            if not dests:
+                break
+            if action.dest in dests:
+                dests.pop(dests.index(action.dest))
+                action.completer = dest_mapping[action.dest]  # type: ignore
+        return dests
 
 
 class BaseModelAdapter(BaseSettingsAdapter):
