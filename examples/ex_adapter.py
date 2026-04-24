@@ -10,11 +10,12 @@ from pydantic_settings import (
 )
 from rich import print
 
-from overhead_cmd2.cmd import BaseModelAdapter, BaseSettingsAdapter
+from overhead_cmd2.adapter import ModelAdapter, SettingsAdapter
 
 
 class DirList(BaseModel):
     path: CliPositionalArg[Path] = Path.cwd()
+    extra: Path = Path.cwd()
 
     def main(self):
         print(self.model_dump())
@@ -39,23 +40,24 @@ class Git(BaseSettings):
 
 @with_default_category("My Commands")
 class DirCommandSet(CommandSet):
-    dir_adapter = BaseModelAdapter(DirList)
-    dir_adapter.apply_completer({"path": Cmd.path_complete})
+    dir_adapter = ModelAdapter(DirList)
+    dir_adapter.add_path_completer("path", "extra")
 
     @with_argparser(dir_adapter.parser)
     def do_dir(self, args: Namespace):
-        print(args)
-        self.dir_adapter.cli_run(args)
+        self.dir_adapter.set_cli_run(DirList.main)
+        self.dir_adapter.run(args)
 
 
 @with_default_category("My Commands")
 class GitCommandSet(CommandSet):
-    git_adapter = BaseSettingsAdapter(Git)
+    git_adapter = SettingsAdapter(Git)
+    git_adapter.add_path_completer("directory", "clone.directory")
 
     @with_argparser(git_adapter.parser)
     def do_git(self, args: Namespace):
-        print(args)
-        self.git_adapter.cli_run(args)
+        self.git_adapter.set_cli_run(Git.main)
+        self.git_adapter.run(args)
 
 
 if __name__ == "__main__":

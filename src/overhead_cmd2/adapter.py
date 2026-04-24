@@ -15,7 +15,7 @@ class BaseAdapter:
     def create_parser(self, *args, **kwargs) -> ArgumentParser:
         return Cmd2ArgumentParser()
 
-    def apply_completer(self, dest_mapping: dict[str, Callable]) -> list[str]:
+    def add_completer(self, dest_mapping: dict[str, Callable]) -> list[str]:
         dests = list(dest_mapping.keys())
         for action in self.parser._actions:
             if not dests:
@@ -25,8 +25,8 @@ class BaseAdapter:
                 action.completer = dest_mapping[action.dest]  # type: ignore
         return dests
 
-    def apply_path_completer(self, *dest: str) -> list[str]:
-        return self.apply_completer({_: Cmd.path_complete for _ in set(dest)})
+    def add_path_completer(self, *dest: str) -> list[str]:
+        return self.add_completer({_: Cmd.path_complete for _ in set(dest)})
 
     def set_cli_run(self, method: Callable, *args, **kwargs):
         setattr(self.Settings, "cli_run", partial(method, *args, **kwargs))
