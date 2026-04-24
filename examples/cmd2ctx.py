@@ -1,15 +1,15 @@
 import sys
 from contextlib import contextmanager
-from typing import Iterator, Any, IO
+from typing import IO, Any, Iterator
 
 from cmd2 import Cmd
-from cmd2.styles import Cmd2Style
 from cmd2.rich_utils import APP_THEME, RichPrintKwargs, prepare_objects_for_rendering
+from cmd2.styles import Cmd2Style
 from rich.console import Console, ThemeContext
-from rich.style import StyleType
-from rich.traceback import Traceback
-from rich.text import Text
 from rich.highlighter import ReprHighlighter
+from rich.style import StyleType
+from rich.text import Text
+from rich.traceback import Traceback
 
 _DISALLOWED_ATTRIBUTES = {
     "force_terminal": "Passing 'force_terminal' is not allowed. Its behavior is controlled by the 'ALLOW_STYLE' setting.",
@@ -61,7 +61,9 @@ def cmd2_state_base(console: Console, **attrs) -> Iterator[ThemeContext]:
 
 
 @contextmanager
-def cmd2_state_general(console: Console, file: IO[str] = sys.stdout) -> Iterator[ThemeContext]:
+def cmd2_state_general(
+    console: Console, file: IO[str] = sys.stdout
+) -> Iterator[ThemeContext]:
     with cmd2_state_base(
         console,
         soft_wrap=True,
@@ -74,7 +76,9 @@ def cmd2_state_general(console: Console, file: IO[str] = sys.stdout) -> Iterator
 
 
 @contextmanager
-def cmd2_state_exception(console: Console, file: IO[str] = sys.stderr) -> Iterator[ThemeContext]:
+def cmd2_state_exception(
+    console: Console, file: IO[str] = sys.stderr
+) -> Iterator[ThemeContext]:
     with cmd2_state_general(console, file=file) as _:
         yield _
 
@@ -168,10 +172,13 @@ class MyCmd(Cmd):
 
         # If not in debug mode and the 'debug' setting is available,
         # inform the user how to enable full tracebacks.
-        if not self.debug and 'debug' in self.settables:
+        if not self.debug and "debug" in self.settables:
             help_msg = Text.assemble(
                 "\n\n",
-                ("To enable full traceback, run the following command: ", Cmd2Style.WARNING),
+                (
+                    "To enable full traceback, run the following command: ",
+                    Cmd2Style.WARNING,
+                ),
                 ("set debug true", Cmd2Style.COMMAND_LINE),
             )
             final_msg.append(help_msg)

@@ -1,60 +1,9 @@
 from argparse import ArgumentParser, Namespace
-from typing import Dict, Optional, Type, Union, Callable
+from typing import Dict, Optional, Type, Union
 
 from cmd2 import Cmd, Cmd2ArgumentParser, Cmd2AttributeWrapper, with_argparser
 from pydantic import BaseModel
-from pydantic_settings import BaseSettings, CliSettingsSource, CliApp
-
-
-class BaseSettingsAdapter:
-    Settings: type[BaseSettings]
-    parser: ArgumentParser
-    settings_source: CliSettingsSource
-
-    def create_parser(self, *args, **kwargs) -> ArgumentParser:
-        return Cmd2ArgumentParser()
-
-    def __init__(
-        self,
-        settings: type[BaseSettings],
-    ) -> None:
-        self.Settings = settings
-        self.parser = self.create_parser()
-        self.settings_source = CliSettingsSource(self.Settings, root_parser=self.parser)
-
-    def cli_run(self, args: Namespace):
-        return CliApp.run(self.Settings, cli_settings_source=self.settings_source, cli_args=args)
-
-    def apply_completer(self, dest_mapping: dict[str, Callable]) -> list[str]:
-        dests = list(dest_mapping.keys())
-        for action in self.parser._actions:
-            if not dests:
-                break
-            if action.dest in dests:
-                dests.pop(dests.index(action.dest))
-                action.completer = dest_mapping[action.dest]  # type: ignore
-        return dests
-
-
-class BaseModelAdapter(BaseSettingsAdapter):
-    Model: type[BaseModel]
-    Settings: type[BaseSettings]
-    parser: ArgumentParser
-    settings_source: CliSettingsSource
-
-    def __init__(
-        self,
-        model: type[BaseModel],
-        cli_run_attr: str = "main",
-        settings: type[BaseSettings] = BaseSettings,
-    ) -> None:
-        self.Model = model
-        Settings = type(
-            "Settings",
-            (settings, model),
-            {"cli_run": getattr(model, cli_run_attr)},
-        )
-        super().__init__(settings=Settings)
+from pydantic_settings import BaseSettings, CliSettingsSource
 
 
 def model_to_parser(

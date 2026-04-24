@@ -20,4 +20,4 @@ def test_import():
 )
 def test_missing():
     with pytest.raises(ImportError):
-        from overhead_cmd2._loguru import LoguruCmd  # noqa: 401
+        pass
