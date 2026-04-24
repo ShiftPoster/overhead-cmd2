@@ -1,7 +1,7 @@
 from argparse import Namespace
 from pathlib import Path
 
-from cmd2 import Cmd, CommandSet, with_default_category, with_argparser
+from cmd2 import Cmd, CommandSet, with_argparser, with_default_category
 from pydantic import BaseModel
 from pydantic_settings import (
     BaseSettings,
